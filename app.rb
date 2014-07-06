@@ -4,16 +4,14 @@ Bundler.require
 
 
 require 'td'
+require './socket_logger'
 
-port =  ENV['ROOT_PORT'].to_i > 24224 ?  ENV['ROOT_PORT'].to_i - 1 :  ENV['ROOT_PORT'].to_i + 1
+TreasureData::Logger.open_socket("td.#{ENV["TD_DATABASE"]}", path: ENV["TD_SOCKET"])
 
-TreasureData::Logger.open_agent("td.#{ENV["TD_DATABASE"]}", :host=>'localhost', :port=> port)
-#TreasureData::Logger.open_agent("debug.#{ENV["TD_DATABASE"]}", :host=>'localhost', :port=>port)
 
 get '/log' do
   TD.event.post('event', params)
-  "#{port}\n"
-
+  200
 end
 
 
